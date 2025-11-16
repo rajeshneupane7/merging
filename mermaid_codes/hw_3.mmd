@@ -1,0 +1,60 @@
+
+graph TD
+    %% Styles
+    classDef attacker fill:#ffcccc,stroke:#ff0000,stroke-width:2px,color:black;
+    classDef defense fill:#ccffcc,stroke:#009900,stroke-width:2px,color:black;
+    classDef failure fill:#ff9999,stroke:#cc0000,stroke-width:2px,stroke-dasharray: 5 5,color:black;
+    classDef success fill:#e6f7ff,stroke:#0066cc,stroke-width:2px,color:black;
+
+    %% Actors and Start
+    Attacker[("👹 Threat Actor<br>(Compromised Credentials)")]:::attacker
+    
+    %% Phase 1: Identification & Authentication
+    subgraph Phase1 ["🛡️ Phase 1: Identification & Authentication (OWASP A07 Mitigation)"]
+        Gateway["VPN / SSO Gateway"]
+        MFA_Check{"Check: MFA / TOTP<br>(Control A & C)"}:::defense
+        Log_Auth["Log Auth Event to SIEM<br>(Control E)"]:::defense
+    end
+
+    %% Phase 2: Authorization & Access Control
+    subgraph Phase2 ["🔐 Phase 2: Privilege & Lateral Movement Control"]
+        Segmentation{"Check: Network Segmentation<br>Micro-segmentation<br>(Control D)"}:::defense
+        Privilege{"Check: JIT / Ephemeral Access<br>(Control B)"}:::defense
+    end
+
+    %% Phase 3: Detection & Exfiltration
+    subgraph Phase3 ["👁️ Phase 3: Detection & Response"]
+        EDR_Check{"Check: EDR Anomaly Detection<br>(Geo-location / Behavior)<br>(Control E)"}:::defense
+    end
+
+    %% The Flow
+    Attacker -->|Attempts Remote Access| Gateway
+    Gateway --> MFA_Check
+    
+    %% MFA Logic
+    MFA_Check -- "❌ No MFA (United Healthcare Reality)" --> Breach_Access[Unauthorized Access Granted]:::failure
+    MFA_Check -- "✅ MFA Enforced" --> Block_1[⛔ Attack Thwarted: Identity Verified]:::success
+    MFA_Check -.-> Log_Auth
+
+    %% Lateral Movement Logic
+    Breach_Access -->|Attempts Lateral Movement| Privilege
+    Privilege -- "❌ Static Admin Creds" --> Admin_Access[Admin Access Gained]:::failure
+    Privilege -- "✅ JIT/Ephemeral Required" --> Block_2[⛔ Attack Thwarted: No Standing Privileges]:::success
+
+    %% Segmentation Logic
+    Admin_Access -->|Attempts to Reach Claims DB| Segmentation
+    Segmentation -- "❌ Flat Network" --> DB_Access[Backend Systems Accessed]:::failure
+    Segmentation -- "✅ Jump Host / Micro-segmentation" --> Block_3[⛔ Attack Thwarted: Network Isolated]:::success
+
+    %% Exfiltration Logic
+    DB_Access -->|Attempts Data Exfiltration| EDR_Check
+    EDR_Check -- "❌ Silent Logs" --> Ransom[💸 Ransomware Deployed & Data Stolen]:::attacker
+    EDR_Check -- "✅ SIEM Alert Triggered" --> Response[⛔ Attack Contained: Rapid Response]:::success
+
+    %% Linking Controls to your list
+    %% This section is for documentation in the diagram
+    note1[Control A: Enforce MFA] -.-> MFA_Check
+    note2[Control C: SSO Brokered Auth] -.-> Gateway
+    note3[Control B: JIT/Ephemeral Creds] -.-> Privilege
+    note4[Control D: Micro-segmentation] -.-> Segmentation
+    note5[Control E: SIEM/EDR Logging] -.-> EDR_Check
