@@ -152,3 +152,13 @@ To github.com:rajeshneupane7/merging.git
    b1334ec..04d0978  main -> main
 [Sun Nov 23 18:00:03 CST 2025] Changes committed and pushed successfully.
 [Mon Nov 24 18:00:01 CST 2025] No changes detected. Exiting.
+[main b4fd86f] Auto commit on 2025-11-28 18:00:01
+ 6 files changed, 79 insertions(+)
+ create mode 100644 mermaid_codes/prelim-graphs-01-a97561dd.pdf
+ create mode 100644 mermaid_codes/prelim-graphs.md
+ create mode 100644 mermaid_codes/process-flow-01-7fe5847e.pdf
+ create mode 100644 mermaid_codes/process-flow-02-8fafb4ca.pdf
+ create mode 100644 mermaid_codes/process-flow.md
+To github.com:rajeshneupane7/merging.git
+   4b66982..b4fd86f  main -> main
+[Fri Nov 28 18:00:02 CST 2025] Changes committed and pushed successfully.

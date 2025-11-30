@@ -1,0 +1,23 @@
+
+```mermaid 
+flowchart TD
+
+    %% Step 1: Training CV model
+    A[Videos Collected] --> B[Sample Video Frames]
+    B --> C[Annotate Images<br>Open-Mouth Breathing, etc.]
+    C --> D[Fine-Tune Pretrained CNN<br>e.g., YOLOv11]
+
+    %% Step 2: Feature extraction
+    D --> E[Extract Feature Tensor<br>Before Fully connected  Layer - C × H × W]
+
+    %% Step 3: Tensor → Vector conversion
+    E --> F1[Global Average Pooling<br>→ Vector n1]
+    E --> F2[Max Pooling<br>→ Vector n2]
+
+    %% Step 4: Combine → Final embedding
+    F1 --> G[Feature Vector n1+n2]
+    F2 --> G
+
+    %% Final output
+    G --> H[Final 1D Feature Vector<br>Used for downstream tasks]
+```

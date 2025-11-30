@@ -1,78 +1,63 @@
 ```mermaid
 
 flowchart TD
-classDef singleline fill=none,color=black,font-size=16px,font-weight=bold;
+    %% CONFIGURATION
+    %%{init: {'theme': 'base', 'themeVariables': { 'fontSize': '14px', 'fontFamily': 'arial', 'primaryColor': '#fff', 'edgeLabelBackground':'#f4f4f4'}}}%%
 
-    %% ======================
-    %% INPUTS
-    %% ======================
-    subgraph Inputs[Input Data Sources]
-        A1[RGB Cameras]
-        A2[Depth Cameras]
-        A3[Milk Production Data]
-        A4[Rumen Bolus Sensors]
-        A5[Temp & Humidity Sensors]
-        A6[Barn Layout Metadata]
+    %% --- VISUAL SENSOR LAYER ---
+    subgraph VisualLayer [Visual Sensor Layer]
+        direction TB
+        Cameras[/"RGB & Depth Cameras<br/>(Holding Pens, Milking Robots)"/]
+        Indicators[/"Extract Indicators:<br/>- Respiration Rate<br/>- Open-Mouth Breathing<br/>- Water Visits<br/>- Shade Seeking"/]
+        
+        Cameras --> Indicators
     end
 
-    %% ======================
-    %% LEVEL 1: VISUAL SENSOR LAYER
-    %% ======================
-    subgraph L1[Level 1: Visual Sensor Layer]:::singleline
-        B1[Preprocessing<br>Frame Cleaning, Stabilization]
-        B2[Behavior Extraction<br>Respiration, Panting, Posture]
-        B3[Cow Tracking & Identification]
+    %% --- EXTERNAL DATA SOURCES ---
+    subgraph ExistingData [Existing Farm Data Sources]
+        direction TB
+        MilkSensors[/"Milk Meters:<br/>Yield & Conductivity"/]
+        RumenSensors[/"Rumen Bolus:<br/>Rumination, Activity,<br/>Body Temp"/]
+        EnvSensors[/" localized<br/>THI Sensors"/]
     end
 
-    %% ======================
-    %% LEVEL 2: DATA EMBEDDING LAYER
-    %% ======================
-    subgraph L2[Level 2: Data Embedding & Fusion Layer]:::singleline
-        C1[Feature Encoding<br>Vision Features]
-        C2[Fusion Engine<br>Vision + Bolus + Milk + THI]
-        C3[Unified Multimodal Embedding]
+    %% --- DATA EMBEDDING LAYER ---
+    subgraph EmbeddingLayer [Data Embedding Layer]
+        Fusion[("Data Fusion &<br/>Pre-processing")]
     end
 
-    %% ======================
-    %% LEVEL 3: DECISION LAYER
-    %% ======================
-    subgraph L3[Level 3: Decision Layer]:::singleline
-        D1[Heat Stress Prediction Models]
-        D2[Zone-Level Heat Mapping]
-        D3[Cooling Control Engine<br>Rules + ML Decisions]
+    %% --- DECISION LAYER ---
+    subgraph DecisionLayer [Decision Layer]
+        Logic{"Hierarchical<br/>Threshold<br>Analysis"}
+        Control["ACTUATE<br/>Cooling Systems<br/>(Fans/Soakers)"]
+        Alerts[/"Generate Alerts:<br/>- Equipment Failure<br/>- Early Warning"/]
     end
 
-    %% ======================
-    %% OUTPUTS
-    %% ======================
-    subgraph Outputs[Outputs / Actions]
-        O1[Activate Fans]
-        O2[Trigger Sprinklers/Foggers]
-        O3[Send Alerts to Farmer]
-        O4[Generate Heat Stress Phenotypes]
-        O5[Log Data for Genetic Selection]
-    end
-
-    %% ======================
     %% CONNECTIONS
-    %% ======================
-    A1 --> B1
-    A2 --> B1
-    B1 --> B2 --> B3
+    %% Inputs to Fusion
+    Indicators --> Fusion
+    MilkSensors --> Fusion
+    RumenSensors --> Fusion
+    EnvSensors --> Fusion
 
-    A3 --> C1
-    A4 --> C1
-    A5 --> C1
-    A6 --> C1
+    %% Fusion to Logic
+    Fusion --> Logic
 
-    B3 --> C1
-    C1 --> C2 --> C3
+    %% Logic Outputs
+    Logic -- "Threshold Met" --> Control
+    Logic -- "Anomaly Detected" --> Alerts
+    
+    %% Closed Loop Feedback
+    Control -.-> |"Cooling lowers cow heat stress"| Cameras
 
-    C3 --> D1 --> D2 --> D3
+    %% STYLING
+    classDef sensors fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
+    classDef processing fill:#fff9c4,stroke:#fbc02d,stroke-width:2px;
+    classDef decision fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
+    classDef action fill:#ffebee,stroke:#c62828,stroke-width:2px;
 
-    D3 --> O1
-    D3 --> O2
-    D1 --> O3
-    C3 --> O4
-    O4 --> O5
+    class Cameras,MilkSensors,RumenSensors,EnvSensors,Indicators sensors;
+    class Fusion processing;
+    class Logic decision;
+    class Control,Alerts action;
 ```
