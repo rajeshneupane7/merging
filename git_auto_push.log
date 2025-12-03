@@ -175,3 +175,12 @@ To github.com:rajeshneupane7/merging.git
 To github.com:rajeshneupane7/merging.git
    b4fd86f..6df92ee  main -> main
 [Sat Nov 29 18:00:03 CST 2025] Changes committed and pushed successfully.
+[main acbfe41] Auto commit on 2025-12-01 18:00:01
+ 5 files changed, 13 insertions(+)
+ create mode 100644 mermaid_codes/sushil_prelim_4-01-d0d1218b.pdf
+ create mode 100644 mermaid_codes/sushil_prelim_4.md
+ create mode 100644 mermaid_codes/sushil_prelim_5-01-91905c1c.pdf
+ create mode 100644 mermaid_codes/sushil_prelim_5.md
+To github.com:rajeshneupane7/merging.git
+   6df92ee..acbfe41  main -> main
+[Mon Dec  1 18:00:03 CST 2025] Changes committed and pushed successfully.
